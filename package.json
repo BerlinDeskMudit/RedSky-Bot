@@ -1,0 +1,30 @@
+{
+  "name": "red-sky",
+  "version": "0.2.0",
+  "description": "Red Sky — Grok Bot–style local AI teammates. Runtime is OpenCode on this machine (not Ollama).",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "node build.mjs && vite build --config vite.config.ts",
+    "start": "npm run build && electron .",
+    "dev": "npm run build && electron .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "dompurify": "^3.2.4",
+    "marked": "^15.0.7",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.4",
+    "@types/node": "^22.13.1",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "@vitejs/plugin-react": "^4.4.1",
+    "electron": "^37.2.0",
+    "esbuild": "^0.25.0",
+    "tailwindcss": "^4.1.4",
+    "typescript": "^5.7.3",
+    "vite": "^6.3.5"
+  }
+}

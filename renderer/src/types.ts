@@ -1,0 +1,32 @@
+export type {
+  AppNotice,
+  AppSettings,
+  Artifact,
+  BootState,
+  Bot,
+  BotStatus,
+  ChatMessage,
+  ComputerEvent,
+  Connector,
+  ConnectorStatus,
+  EventEnvelope,
+  FileNode,
+  InitPayload,
+  JobTemplate,
+  MemoryRow,
+  ModelOption,
+  NoticeKind,
+  PendingPermission,
+  RedSkyApi,
+  ReviewMode,
+  Room,
+  Routine,
+  RunDiff,
+  SearchHit,
+} from '../../shared/types'
+
+declare global {
+  interface Window {
+    redsky: import('../../shared/types').RedSkyApi
+  }
+}
