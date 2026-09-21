@@ -4,6 +4,27 @@ Red Sky is a Grok Bot–style desktop app that runs local AI teammates on your m
 
 The runtime is **OpenCode** running locally on this machine — **not Ollama**.
 
+## Screenshots
+
+![Red Sky dashboard](docs/screenshots/dashboard.png)
+
+*The dashboard: your bots in the left nav, the selected bot's chat and live activity trail on the right.*
+
+| Create a new agent | Edit an agent |
+| --- | --- |
+| ![Create new agent](docs/screenshots/create-new-agent.png) | ![Edit the agent](docs/screenshots/edit-agent.png) |
+| Give a bot a name, a job, and a model — or start from a template. | Rename, re-prompt, change the model, or delete a bot. |
+
+| Chat actions | Left nav bar |
+| --- | --- |
+| ![Chat options: edit, delete, update](docs/screenshots/chat-actions.png) | ![Left nav bar](docs/screenshots/left-nav-bar.png) |
+| Per-message actions — edit, copy, delete, and branch the conversation. | Switch between bots, rooms, and scheduled routines. |
+
+| Notification bar | Processing a task |
+| --- | --- |
+| ![Notification bar](docs/screenshots/notification-bar.png) | ![Processing](docs/screenshots/processing.png) |
+| Desktop notifications when a bot finishes or needs a human. | A bot streaming its work — tools run, files touched, shell commands. |
+
 ## Features
 
 - **Multi-agent chat** — create, rename, duplicate, and delete bots; watch their replies stream in live.
