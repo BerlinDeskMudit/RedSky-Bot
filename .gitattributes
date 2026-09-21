@@ -1,0 +1,18 @@
+# Normalize text files to LF in the repository, whatever the contributor's OS.
+* text=auto
+
+# Never touch binary assets.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.icns binary
+*.exe binary
+*.dll binary
+*.node binary
+
+# Lockfiles and generated artifacts: always LF, never diffed as text by tools.
+package-lock.json text eol=lf -diff
+dist/** -diff

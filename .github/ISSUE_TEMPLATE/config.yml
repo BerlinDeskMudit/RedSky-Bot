@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/0xMudit/RedSky-Bot/security/advisories/new
+    about: Report vulnerabilities privately. Please never open a public issue for a security problem.
+  - name: Setup, configuration, and troubleshooting
+    url: https://github.com/0xMudit/RedSky-Bot/blob/main/docs/CONFIGURATION.md
+    about: Environment variables, settings, data locations, logs, and schedule syntax — read this before filing a bug.
+  - name: Contributing and development
+    url: https://github.com/0xMudit/RedSky-Bot/blob/main/CONTRIBUTING.md
+    about: How to set up, what a reviewable pull request looks like, and the review process.

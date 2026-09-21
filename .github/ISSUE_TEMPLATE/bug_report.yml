@@ -1,0 +1,117 @@
+name: Bug report
+description: Something in Red Sky is broken, crashes, or misbehaves
+title: '[Bug]: '
+labels: ['bug', 'needs triage']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this. Red Sky depends on a locally installed OpenCode CLI, so a
+        few environment details go a long way.
+
+        **Before you file:** check [Troubleshooting](https://github.com/0xMudit/RedSky-Bot#troubleshooting)
+        and the [configuration reference](https://github.com/0xMudit/RedSky-Bot/blob/main/docs/CONFIGURATION.md)
+        — most "stuck starting", "offline", and empty-model-picker reports are covered there.
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Preflight
+      options:
+        - label: I searched the existing issues and did not find a duplicate.
+          required: true
+        - label: I am not reporting a security vulnerability (those go through SECURITY.md, never a public issue).
+          required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: A clear, specific description of the bug.
+      placeholder: I sent a task to an agent and the run ended with a permission card that could not be answered.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Exact steps, including the prompt you sent if one was involved.
+      placeholder: |
+        1. `npm start`
+        2. Create an agent from the "Bug Reproduction" template
+        3. Send "delete the outbound list"
+        4. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      placeholder: The approval card answers and the run continues or is discarded.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include error text verbatim if there is any, and say whether the app or an agent was affected.
+      placeholder: The card stays on screen, the agent stays in "waiting", and the logs show ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - Other (described below)
+    validations:
+      required: true
+
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: Run `node --version`, `npm --version`, and `opencode --version`.
+      placeholder: 'node v20.19.0 · npm 10.8.2 · opencode 0.x.y · Red Sky 0.2.0'
+    validations:
+      required: true
+
+  - type: dropdown
+    id: install
+    attributes:
+      label: How are you running Red Sky?
+      options:
+        - From source (git clone + npm start)
+        - Attached to my own OpenCode server (REDSKY_OPCODE_URL)
+        - Other (described below)
+    validations:
+      required: true
+
+  - type: textarea
+    id: settings
+    attributes:
+      label: Relevant settings and state
+      description: Privacy mode, Auto Review mode, connectors marked connected, how many agents were running.
+      placeholder: privacyMode on · autoReview sensitive · GitHub connector connected · 1 agent running
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: |
+        Paste the relevant lines from the log directory (use **Open Logs** in the app, or see
+        [Logs](https://github.com/0xMudit/RedSky-Bot/blob/main/docs/CONFIGURATION.md#logs)).
+        `app.ndjson` covers the main process, `tools.ndjson` every agent tool call, `server-*.info` the
+        OpenCode boot. Redact anything personal before pasting.
+      render: text
+    validations:
+      required: false

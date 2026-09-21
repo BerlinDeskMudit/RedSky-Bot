@@ -1,0 +1,79 @@
+name: Feature request
+description: Suggest a capability, workflow, or improvement for Red Sky
+title: '[Feature]: '
+labels: ['enhancement', 'needs triage']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the suggestion. The most useful requests describe the job to be done, not just the
+        mechanism — that leaves room for a better implementation than either of us has thought of yet.
+
+        Large changes are worth discussing before any code is written; see
+        [CONTRIBUTING.md](https://github.com/0xMudit/RedSky-Bot/blob/main/CONTRIBUTING.md).
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Preflight
+      options:
+        - label: I searched the existing issues and the roadmap, and this is not already covered.
+          required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve?
+      description: The situation you are in today, and why it is frustrating or slow.
+      placeholder: I run the same multi-agent review every Monday and have to rebuild the same three agents by hand each time.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would you like to happen?
+      description: Your proposed behavior. Interface sketches and example prompts are welcome.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered
+      description: Workarounds you tried, or other designs you rejected.
+    validations:
+      required: false
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which part of Red Sky does this touch?
+      options:
+        - Agents and chat (renderer UI)
+        - OpenCode integration and the main process
+        - Schedules, rooms, memory, or connectors
+        - Settings, Auto Review, or privacy
+        - Documentation
+        - Build, packaging, or CI
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: risk
+    attributes:
+      label: Safety considerations
+      description: |
+        Does this ask an agent to do something with side effects — sending, spending, deleting, or reaching
+        outside the workspace? If so, say how it should interact with Auto Review.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: contribute
+    attributes:
+      label: Contribution
+      options:
+        - label: I would be willing to open a pull request for this.
+          required: false
