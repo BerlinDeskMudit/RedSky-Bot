@@ -168,18 +168,14 @@ describe('createScheduler', () => {
     const s = scheduler()
     s.add('bot_1', 'every 30 m', 'drink water', 'reminder')
     s.add('bot_1', 'every 1 h', 'stand up', 'reminder')
-    s.add('bot_2', 'every 2 h', 'digest', 'reminder')
+    const digest = s.add('bot_2', 'every 2 h', 'digest', 'reminder')
     const manual = s.add('bot_1', 'every 1 h', 'weekly review', 'manual')
 
     assert.equal(s.removeReminders('bot_1'), 2)
-    assert.deepEqual(
-      s.rows().map((r) => r.id),
-      [s.rows().find((r) => r.prompt === 'digest')!.id, manual.id].sort(),
-    )
-    assert.deepEqual(
-      s.rows().map((r) => r.prompt).sort(),
-      ['digest', 'weekly review'],
-    )
+    assert.deepEqual(s.rows().map((r) => r.prompt).sort(), ['digest', 'weekly review'])
+    // Both sides are sorted: ids carry a random suffix, so their order is not
+    // stable across runs.
+    assert.deepEqual(s.rows().map((r) => r.id).sort(), [digest.id, manual.id].sort())
   })
 
   it('returns 0 when a bot has no reminders', () => {
