@@ -30,7 +30,9 @@
     "build": "node build.mjs && vite build --config vite.config.ts",
     "start": "npm run build && electron .",
     "dev": "npm run build && electron .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build:test": "node scripts/build-tests.mjs",
+    "test": "npm run build:test && node --test build-tests/suite.test.cjs"
   },
   "dependencies": {
     "dompurify": "^3.2.4",

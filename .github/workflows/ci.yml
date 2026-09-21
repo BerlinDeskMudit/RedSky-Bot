@@ -33,7 +33,8 @@ jobs:
             node: '20'
 
     env:
-      # CI never launches Electron, so skip the ~100 MB binary download.
+      # CI never launches Electron — the test bundle aliases the module and the
+      # build only needs `electron` as an external — so skip the ~100 MB download.
       ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
 
     steps:
@@ -52,3 +53,6 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Test
+        run: npm test

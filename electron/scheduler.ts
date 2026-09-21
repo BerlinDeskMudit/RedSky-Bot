@@ -17,7 +17,7 @@ export interface SchedulerHandle {
 
 export function nextDelayMs(schedule: string, from = Date.now()): number | null {
   const s = schedule.trim().toLowerCase()
-  const every = s.match(/^every\s+(\d+)\s*(m|min|mins|minute|minutes|h|hr|hour|hours)$/)
+  const every = s.match(/^every\s+(\d+)\s*(m|min|mins|minute|minutes|h|hr|hrs|hour|hours)$/)
   if (every) {
     const n = Number(every[1])
     if (!Number.isFinite(n) || n <= 0) return null

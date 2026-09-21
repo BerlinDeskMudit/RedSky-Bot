@@ -13,5 +13,12 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true
   },
-  "include": ["electron/**/*.ts", "electron/**/*.d.ts", "renderer/src/**/*.ts", "renderer/src/**/*.tsx", "shared/**/*.ts"]
+  "include": [
+    "electron/**/*.ts",
+    "electron/**/*.d.ts",
+    "renderer/src/**/*.ts",
+    "renderer/src/**/*.tsx",
+    "shared/**/*.ts",
+    "test/**/*.ts"
+  ]
 }
