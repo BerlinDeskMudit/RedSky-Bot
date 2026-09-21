@@ -9,6 +9,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- Test harness on Node's built-in test runner (`npm test`), with esbuild bundling and an Electron double so
+  main-process modules run under plain `node --test`. Suites cover the Auto Review gate, reminder parsing, and
+  the scheduler — including routine firing, disk rehydration, and reminder dedupe.
+- Pinned and archived agents, exposed through the agent editor: pinned agents sort first, archived ones dim
+  and sink to the bottom.
+- Thread branching — any finished result can fork a new agent that takes another run at the same ask, carrying
+  the job and color over.
+- Workspace search in the sidebar: query the contents of the workspace and open a hit directly in the file
+  viewer.
 - Open-source scaffolding: [MIT license](LICENSE), [contributing guide](CONTRIBUTING.md),
   [code of conduct](CODE_OF_CONDUCT.md), [security policy](SECURITY.md), issue forms, a PR template, and
   GitHub Actions CI running typecheck and build on Linux, Windows, and macOS for Node 20 and 22.
@@ -22,6 +31,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - README rewritten as a project front door: requirements, quick start, feature overview, configuration, data
   locations, scripts, troubleshooting, and roadmap.
 - Product name standardized on "Red Sky"; logo and screenshots moved under `docs/`.
+- CI now runs `npm test` alongside typecheck and build on all three platforms.
+
+### Fixed
+
+- `nextDelayMs` rejected the plural hour unit, so `every 4 hrs` was refused while `every 4 hr` worked. The
+  plural is now accepted, matching the minute units.
 
 ### Removed
 

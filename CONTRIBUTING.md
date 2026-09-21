@@ -39,6 +39,7 @@ Run both of these, and make sure they pass:
 ```bash
 npm run typecheck
 npm run build
+npm test
 ```
 
 That is exactly what CI runs, on Linux, Windows, and macOS. A red CI run will not be reviewed.
@@ -77,9 +78,9 @@ That is exactly what CI runs, on Linux, Windows, and macOS. A red CI run will no
   the workspace. If your change widens any of those boundaries, say so explicitly in the PR description.
 - **It updates the docs it invalidates.** A new environment variable or settings key belongs in
   `docs/CONFIGURATION.md`; a new module belongs in the tables in `docs/ARCHITECTURE.md`.
-- **It adds a test when it can.** The repo has no test runner yet (see
-  [Testing](docs/DEVELOPMENT.md#testing)); pure logic — parsing, policy matching, diffs — is where tests pay
-  off most.
+- **It adds a test when it can.** Add a file at `test/<name>.test.ts` and the runner picks it up (see
+  [Testing](docs/DEVELOPMENT.md#testing)). Pure logic — parsing, policy matching, diffs — is where tests pay
+  off most, and fixing a bug should come with the test that would have caught it.
 
 ## Review process
 

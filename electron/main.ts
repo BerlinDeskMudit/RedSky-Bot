@@ -143,6 +143,23 @@ function wireIpc(): void {
 
   ipcMain.handle('rs:duplicateBot', async (_e, botId: string) => requireAgent().duplicateBot(botId))
 
+  ipcMain.handle('rs:setBotFlags', async (_e, botId: string, flags: { pinned?: boolean; archived?: boolean }) =>
+    requireAgent().setBotFlags(botId, flags ?? {}),
+  )
+
+  ipcMain.handle('rs:branchFrom', async (_e, botId: string, messageId: string, model?: string) => {
+    const a = requireAgent()
+    const message = a.getBot(botId)?.thread.find((m) => m.id === messageId)
+    if (!message) throw new Error('message not found')
+    // Branching from a result means a fresh take on the ask that produced it, so the
+    // prompt is resolved here rather than trusted from the renderer.
+    const prompt = message.role === 'user' ? message.text : a.lastUserPrompt(botId) || message.text
+    if (!prompt.trim()) throw new Error('nothing to branch from yet — send a task first')
+    return a.branchFrom(botId, prompt, parseModel(model))
+  })
+
+  ipcMain.handle('rs:search', async (_e, query: string) => (query?.trim() ? requireAgent().search(query.trim()) : []))
+
   ipcMain.handle('rs:send', async (_e, botId: string, payload: { text: string; model?: string; roomId?: string }) => {
     if (!payload?.text?.trim()) throw new Error('empty prompt')
     if (!baseUrl) throw new Error('OpenCode is still starting')

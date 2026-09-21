@@ -128,6 +128,37 @@ function demoApi(): RedSkyApi {
       emit({ source: 'bot', bot })
       return bot
     },
+    setBotFlags: async (botId, flags) => {
+      const bot = bots.find((b) => b.id === botId)!
+      if (flags.pinned !== undefined) bot.pinned = flags.pinned
+      if (flags.archived !== undefined) bot.archived = flags.archived
+      bot.updatedAt = Date.now()
+      emit({ source: 'bot', bot })
+      return bot
+    },
+    branchFrom: async (botId, messageId) => {
+      const src = bots.find((b) => b.id === botId)!
+      const asked = [...src.thread].reverse().find((m) => m.id === messageId && m.role === 'user')
+      const bot: Bot = {
+        id: `demo_${Date.now()}`,
+        name: `${src.name} · take`,
+        job: src.job,
+        hue: src.hue,
+        sessionId: '',
+        status: 'idle',
+        preview: '',
+        thread: asked ? [{ id: `m_${Date.now()}`, role: 'user', text: asked.text, at: Date.now() }] : [],
+        computer: [],
+        parentId: src.id,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      }
+      bots = [bot, ...bots]
+      emit({ source: 'bot', bot })
+      return bot
+    },
+    // The browser demo has no workspace to search.
+    search: async () => [],
     send: async (botId, payload) => {
       const bot = bots.find((b) => b.id === botId)!
       bot.thread.push({ id: `m_${Date.now()}`, role: 'user', text: payload.text, at: Date.now() })

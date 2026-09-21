@@ -121,10 +121,10 @@ The renderer's entire capability set. Every channel is a typed `ipcMain.handle`,
 | Group | Channels |
 | --- | --- |
 | Bootstrap | `rs:init` (one call returning status, workspace, logs, models, agents, memories, routines, templates, connectors, rooms, notices, settings) |
-| Agents | `rs:createBot`, `rs:renameBot`, `rs:duplicateBot`, `rs:listBots`, `rs:deleteBot`, `rs:setWatchMode` |
+| Agents | `rs:createBot`, `rs:renameBot`, `rs:duplicateBot`, `rs:setBotFlags` (pin/archive), `rs:listBots`, `rs:deleteBot`, `rs:setWatchMode` |
 | Runs | `rs:send`, `rs:abortBot`, `rs:permission` |
-| Threads | `rs:patchMessage`, `rs:deleteMessage`, `rs:clearThread`, `rs:resendFrom` |
-| Workspace | `rs:files`, `rs:fileContent`, `rs:tool`, `rs:openWorkspace`, `rs:openLogs` |
+| Threads | `rs:patchMessage`, `rs:deleteMessage`, `rs:clearThread`, `rs:resendFrom`, `rs:branchFrom` |
+| Workspace | `rs:files`, `rs:fileContent`, `rs:search`, `rs:tool`, `rs:openWorkspace`, `rs:openLogs` |
 | Memory | `rs:listMemories`, `rs:addMemory`, `rs:deleteMemory`, `rs:clearMemories` |
 | Schedules | `rs:listRoutines`, `rs:addRoutine`, `rs:removeRoutine`, `rs:toggleRoutine`, `rs:teachRoutine` |
 | Connectors & rooms | `rs:listConnectors`, `rs:updateConnector`, `rs:listRooms`, `rs:createRoom`, `rs:addToRoom`, `rs:renameRoom`, `rs:deleteRoom` |
@@ -178,18 +178,18 @@ workspace — not the approval card — as the security boundary.
 
 These are honest gaps, tracked on the [roadmap](../README.md#roadmap):
 
-- **No tests.** There is no test runner and no test files; `policy.ts`, `remind.ts`, `collab.ts`, and the
-  stores are the highest-value places to start.
+- **Thin test coverage.** `npm test` covers the Auto Review gate, reminder parsing, and the scheduler. The
+  stores, the IPC boundary, the agent/OpenCode layer, and the renderer are still untested — a fake
+  `/session` + `/event` server is the missing piece for the middle of that list.
 - **No renderer dev server.** `npm run dev` is a full rebuild; the main process loads a built file, not a Vite
   dev URL.
 - **Connectors are a status board.** `connectors.json` records intent and feeds the system prompt; there is no
   OAuth or API integration behind it yet.
 - **Browser automation is a stub.** `electron/browser.ts` describes the intended Playwright persistent-context
   design but does not launch anything.
-- **Some main-process helpers have no UI.** `setBotFlags` (pin/archive), `branchFrom` (branch a new agent
-  from an existing thread), `agent.search` (workspace search over file contents), and `importDroppedFiles`
-  (drag-and-drop into the workspace) all exist and are exercised by nothing yet. Wiring one to an IPC channel
-  and a control in the renderer is a self-contained first contribution.
+- **Some main-process helpers are still unwired.** `importDroppedFiles` (drag-and-drop into the workspace)
+  has no IPC channel or UI, and `createBrowserHandle` in `electron/browser.ts` is a stub that launches
+  nothing. Wiring either up is a self-contained first contribution.
 - **Schedules are in-process.** Timers live in the main process, so routines only fire while the app is
   running, and a missed window is not replayed.
 - **Single window, single user.** No multi-window support and no per-user permissions on the workspace.

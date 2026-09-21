@@ -67,6 +67,7 @@ export function MessageBlock({
   onEdit,
   onDelete,
   onResend,
+  onBranch,
 }: {
   role: ChatMessage['role']
   text: string
@@ -82,6 +83,7 @@ export function MessageBlock({
   onEdit?: () => void
   onDelete?: () => void
   onResend?: () => void
+  onBranch?: () => void
 }): React.JSX.Element {
   const html = useMemo(() => renderMarkdown(text), [text])
   const actions = (
@@ -99,6 +101,11 @@ export function MessageBlock({
       {onResend && (
         <button onClick={onResend} className="text-[10px] px-1.5 py-0.5 rounded-md hover:bg-[var(--bg-hover)]" style={{ color: 'var(--text-accent)' }}>
           Replay
+        </button>
+      )}
+      {onBranch && (
+        <button onClick={onBranch} className="text-[10px] px-1.5 py-0.5 rounded-md hover:bg-[var(--bg-hover)]" style={{ color: 'var(--text-accent)' }}>
+          Branch
         </button>
       )}
       {onDelete && (
@@ -587,23 +594,32 @@ export function BotRow({
   unread?: boolean
   onSelect: () => void
 }): React.JSX.Element {
+  const archived = Boolean(bot.archived)
   return (
     <button
       onClick={onSelect}
+      title={archived ? `${bot.name} · archived` : bot.name}
       className="w-full text-left rounded-[10px] px-2 py-2 mb-0.5 flex items-center gap-2 transition-colors hover:bg-[var(--sidebar-hover)]"
-      style={{ background: active ? 'var(--sidebar-selected)' : 'transparent' }}
+      style={{ background: active ? 'var(--sidebar-selected)' : 'transparent', opacity: archived ? 0.55 : 1 }}
     >
       <span className="relative">
         <BlobAvatar hue={bot.hue} size={32} />
         {unread && <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full hit-pulse" style={{ background: bot.hue }} />}
       </span>
       <span className="min-w-0 flex-1">
-        <span className="flex items-center gap-2">
+        <span className="flex items-center gap-1.5">
+          {bot.pinned && (
+            <span
+              className="w-1.5 h-1.5 rounded-full shrink-0"
+              style={{ background: 'var(--text-accent)' }}
+              title="Pinned"
+            />
+          )}
           <span className="text-[13px] font-medium truncate" style={{ color: 'var(--sidebar-text)' }}>
             {bot.name}
           </span>
           <span className="ml-auto text-[11px] shrink-0" style={{ color: unread ? 'var(--text-accent)' : 'var(--sidebar-faint)' }}>
-            {unread ? 'New' : timeLabel(bot.updatedAt)}
+            {unread ? 'New' : archived ? 'Archived' : timeLabel(bot.updatedAt)}
           </span>
         </span>
         <span className="block text-[12px] truncate mt-0.5" style={{ color: 'var(--sidebar-muted)' }}>

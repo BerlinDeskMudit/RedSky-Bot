@@ -35,7 +35,9 @@ file to create.
 | `npm start` | `node build.mjs && vite build` then `electron .`. The app runs from `dist/`. |
 | `npm run dev` | Alias of `npm start`. |
 | `npm run build` | Build main + preload + renderer into `dist/` without launching. |
-| `npm run typecheck` | `tsc --noEmit` across `electron/`, `renderer/src/`, and `shared/`. |
+| `npm run typecheck` | `tsc --noEmit` across `electron/`, `renderer/src/`, `shared/`, and `test/`. |
+| `npm test` | Bundle the suites and run them with `node --test`. |
+| `npm run build:test` | Bundle `test/*.test.ts` into `build-tests/suite.test.cjs` without running anything. |
 
 **There is no hot reload.** Every code change needs a rebuild and an app restart. `npm run build` alone is the
 fast feedback loop for a typecheck-and-bundle sanity pass; CI runs exactly that.
@@ -143,23 +145,64 @@ current behavior is the documented developer loop and CI depends on it.
 
 ## Testing
 
-**There are no tests yet.** No runner, no test files, no CI test step. That is the single biggest gap in the
-repo, and contributions here are especially welcome.
+Suites run on Node's built-in test runner — no Vitest, no Jest, no runtime TypeScript loader.
 
-The highest-value first targets, in order:
+```bash
+npm test              # bundle, then `node --test build-tests/suite.test.cjs`
+npm run build:test    # bundle only, if you want to read the emitted file
+```
+
+Add a file at `test/<name>.test.ts` and it is picked up automatically; nothing else to register.
+
+### How the harness works
+
+`scripts/build-tests.mjs` discovers `test/*.test.ts`, generates one entry that imports them all, and bundles it
+with esbuild to `build-tests/suite.test.cjs` (gitignored). Bundling buys three things:
+
+- TypeScript and `electron/**` imports work directly, so tests exercise the real modules rather than copies.
+- `electron` is aliased to the double in `test/stubs/electron.ts`, so a plain Node process can import code
+  that normally only runs inside Electron.
+- One explicit file path behaves identically on Node 20–24 and in every shell, with no glob expansion needed.
+
+### Keep tests hermetic
+
+`test/helpers.ts` hands each test its own `userData` directory. Call `useTempHome()` before constructing the
+unit under test — the Electron double resolves `app.getPath('userData')` from `REDSKY_TEST_HOME` on every call
+— and `cleanupTempHomes()` when the suite is done. A test must never read or write the real data directory.
+
+Timers can be faked with the runner's own mocks, which is how a one-minute routine is tested without waiting a
+minute:
+
+```ts
+it('fires a routine when its interval elapses', async (t) => {
+  t.mock.timers.enable({ apis: ['setTimeout'] })
+  // …schedule work, then:
+  t.mock.timers.tick(MINUTE)
+  await drainMicrotasks() // let the re-arm promise chain settle
+})
+```
+
+### What is covered today
+
+| Suite | Covers |
+| --- | --- |
+| `test/policy.test.ts` | Every Auto Review pattern group × every mode, plus word-boundary, case, and empty-input behavior. |
+| `test/remind.test.ts` | Reminder parsing — clock times, am/pm edges, intervals, the cancel phrases — and the label copy. |
+| `test/scheduler.test.ts` | Schedule parsing (including the invalid inputs), routine CRUD, reminder dedupe, disk rehydration, firing, and `stop()`. |
+
+### What still needs tests
 
 | Module | Why it is worth testing |
 | --- | --- |
-| `electron/policy.ts` | Pure functions, security-relevant, trivially testable: every pattern × every mode. |
-| `electron/remind.ts` | Pure parsing of ambiguous natural language, with a long tail of phrasings and a cancel path. |
-| `electron/scheduler.ts` | `nextDelayMs()` is pure and date-dependent — clock edges and invalid input are the interesting cases. |
+| `electron/memory.ts` | `extractMemoryLines()` and the keyword scoring behind recall. |
 | `electron/collab.ts` | Mention parsing with overlapping names and regex-escaping hazards. |
-| `electron/memory.ts` | `extractMemoryLines()` and keyword scoring. |
-| `electron/lib/persist.ts` | Atomicity, corrupt-file fallback, and Windows rename fallback. |
-| `electron/workspace.ts` | `diffSnaps()` and the path-escape guard in `tools.ts`. |
+| `electron/tools.ts` | The destructive-command filter and the workspace path guard. |
+| `electron/workspace.ts` | `diffSnaps()` (which compares size and mtime, not content) and `snapshotWorkspace()` limits. |
+| `electron/lib/persist.ts` | Atomicity, corrupt-file fallback, and the Windows rename fallback. |
+| `electron/store.ts` | The legacy `tasks.json` → `bots.json` migration. |
 
-Node's built-in `node:test` runner is the natural fit — no runtime test framework to adopt, and TypeScript
-files can be run through the same esbuild setup the app already uses. When you add the first suite, add the
-script to `package.json` and a step to `.github/workflows/ci.yml` in the same PR, so the gate exists from day
-one. Keep tests hermetic: cap or inject `Date.now()`, and never point a test at a user's real `userData`
-directory.
+The agent and OpenCode layer (`electron/agent.ts`, `electron/server.ts`) needs a fake `/session` + `/event`
+server before it can be tested meaningfully. That is the highest-value next project, and a good reason to
+discuss the approach in an issue first.
+
+CI runs `npm test` on all three platforms, so any new suite is gated from the moment it lands.

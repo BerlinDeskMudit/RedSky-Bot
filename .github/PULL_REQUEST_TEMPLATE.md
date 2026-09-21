@@ -30,6 +30,7 @@ Name the platform you tested on if the change is platform-sensitive.
 
 - [ ] `npm run typecheck` passes
 - [ ] `npm run build` passes
+- [ ] `npm test` passes, and new logic ships with a suite under `test/`
 - [ ] I ran the app and exercised the change (or explained above why I could not)
 - [ ] One concern per PR — no unrelated refactors or reformatting in this diff
 - [ ] Docs updated where they are now wrong (`README.md`, `docs/ARCHITECTURE.md`, `docs/CONFIGURATION.md`, `docs/DEVELOPMENT.md`, `CHANGELOG.md`)

@@ -189,6 +189,9 @@ export interface RedSkyApi {
   createBot: (payload?: { name?: string; job?: string }) => Promise<Bot>
   renameBot: (botId: string, payload: { name: string; job?: string }) => Promise<Bot>
   duplicateBot: (botId: string) => Promise<Bot>
+  setBotFlags: (botId: string, flags: { pinned?: boolean; archived?: boolean }) => Promise<Bot>
+  branchFrom: (botId: string, messageId: string, model?: string) => Promise<Bot>
+  search: (query: string) => Promise<SearchHit[]>
   send: (botId: string, payload: { text: string; model?: string; roomId?: string; attachments?: string[] }) => Promise<Bot>
   abortBot: (botId: string) => Promise<{ ok: boolean }>
   listBots: () => Promise<Bot[]>

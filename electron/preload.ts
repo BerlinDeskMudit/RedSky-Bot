@@ -6,6 +6,11 @@ const redsky = {
   createBot: (payload?: { name?: string; job?: string }) => ipcRenderer.invoke('rs:createBot', payload),
   renameBot: (botId: string, payload: { name: string; job?: string }) => ipcRenderer.invoke('rs:renameBot', botId, payload),
   duplicateBot: (botId: string) => ipcRenderer.invoke('rs:duplicateBot', botId),
+  setBotFlags: (botId: string, flags: { pinned?: boolean; archived?: boolean }) =>
+    ipcRenderer.invoke('rs:setBotFlags', botId, flags),
+  branchFrom: (botId: string, messageId: string, model?: string) =>
+    ipcRenderer.invoke('rs:branchFrom', botId, messageId, model),
+  search: (query: string) => ipcRenderer.invoke('rs:search', query),
   send: (botId: string, payload: { text: string; model?: string; roomId?: string }) =>
     ipcRenderer.invoke('rs:send', botId, payload),
   abortBot: (botId: string) => ipcRenderer.invoke('rs:abortBot', botId),

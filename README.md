@@ -46,11 +46,12 @@ session you can schedule, correct, and hand work to. The pieces that make that w
 
 | Area | What you get |
 | --- | --- |
-| **Agents** | Create, rename, duplicate, and delete bots. Each bot owns its own OpenCode session, job description, model, and color. |
+| **Agents** | Create, rename, duplicate, pin, archive, and delete bots. Each bot owns its own OpenCode session, job description, model, and color. |
 | **Job templates** | Eight one-click starting points — Sales Outbound, Talent Scout, Paid Media, Expense Manager, Product Performance, Bug Reproduction, Account Health, Chief of Staff. |
 | **Live threads** | Replies stream token-by-token over server-sent events as the bot works. |
 | **Activity feed** | The "computer" trail lists every tool call, file touch, and shell command with the raw detail. |
 | **Artifacts & diffs** | Each finished run reports files added, changed, and removed, with a file browser and inline viewer. |
+| **Branching** | Fork a finished result into a new agent that takes another run at the same ask, inheriting the job and color. |
 | **Memory** | Facts a bot notes with "Noted for next time:" are harvested, stored, and recalled across sessions. |
 | **Schedules & reminders** | Cron-style routines (`every 30 m`, `every 2 h`, `09:00`) and natural-language reminders ("remind me to reconcile spend at 9am"). |
 | **Teach a routine** | Turn the task a bot just did into a recurring schedule with one click. |
@@ -59,6 +60,7 @@ session you can schedule, correct, and hand work to. The pieces that make that w
 | **Privacy mode** | On by default; tells every bot to keep secrets and personal data out of logs and outbound drafts. |
 | **Connectors** | A status board for the tools a bot may use (Browser, Gmail, Calendar, Slack, GitHub, Drive, Notion). |
 | **Notifications** | Desktop and in-app notices when a bot finishes, needs approval, or errors — plus unread counts per agent. |
+| **Search** | Filter agents by name, job, or last result — and search inside the workspace, opening any hit in the file viewer. |
 
 ## Screenshots
 
@@ -207,8 +209,10 @@ vite.config.ts   Renderer bundle (root: renderer/, out: dist/renderer)
 | `npm run dev` | Alias of `npm start` — there is no separate dev server today (see [Roadmap](#roadmap)). |
 | `npm run build` | Build main + preload + renderer into `dist/` without launching. |
 | `npm run typecheck` | Type-check the whole codebase with `tsc --noEmit`. |
+| `npm test` | Bundle and run the test suites on Node's built-in test runner. |
+| `npm run build:test` | Bundle `test/*.test.ts` into `build-tests/suite.test.cjs` without running them. |
 
-CI runs `typecheck` and `build` on Linux (Node 20 and 22), Windows (Node 20), and macOS (Node 20).
+CI runs `typecheck`, `build`, and `test` on Linux (Node 20 and 22), Windows (Node 20), and macOS (Node 20).
 
 ## Troubleshooting
 
@@ -229,9 +233,11 @@ More in [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) and the [issue tracker](https
 - Real connector implementations behind the status board — the board tracks intent, not OAuth yet.
 - Browser automation via a persistent Playwright profile (`electron/browser.ts` is a stub).
 - Downloadable installers with code signing for each platform.
-- Test harness for `policy.ts`, `remind.ts`, `collab.ts`, and the store layer — the repo has no tests yet.
-- Surface the main-process helpers that have no UI yet: pin/archive, branching a new agent from a thread, and
-  workspace search. See [Known limitations](docs/ARCHITECTURE.md#known-limitations).
+- Broader test coverage. The harness today covers Auto Review, reminder parsing, and scheduling; the stores,
+  the IPC boundary, the agent/OpenCode layer, and the renderer still need suites. A fake `/session` + `/event`
+  server is what unblocks the middle of that list.
+- Drag-and-drop file import into the workspace (`importDroppedFiles` exists with no UI), and a DevTools toggle
+  for the frameless window. See [Known limitations](docs/ARCHITECTURE.md#known-limitations).
 
 ## Contributing
 

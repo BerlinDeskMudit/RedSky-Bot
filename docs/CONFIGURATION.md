@@ -119,22 +119,29 @@ Schedules accept three shapes, parsed in `electron/scheduler.ts`:
 
 | Form | Example | Meaning |
 | --- | --- | --- |
-| Interval, minutes | `every 30 m`, `every 15 minutes` | Repeats every 30 / 15 minutes (floor of 5 seconds). |
-| Interval, hours | `every 2 h`, `every 1 hour` | Repeats every 2 hours. |
+| Interval, minutes | `every 30 m`, `every 15 minutes`, `every 2 mins` | Repeats every 30 / 15 / 2 minutes. |
+| Interval, hours | `every 2 h`, `every 1 hour`, `every 4 hrs` | Repeats every 2 / 1 / 4 hours. |
 | Daily clock time | `09:00`, `daily 09:30` | Fires at that local time; if it already passed today, tomorrow. |
 
-Anything else is rejected with: *"unrecognized schedule — use `every 30 m`, `every 2 h`, or `09:00`"*.
+Seconds are not supported — one minute is the smallest interval — and the hour/minute unit must be one of
+`m`, `min`, `mins`, `minute`, `minutes`, `h`, `hr`, `hrs`, `hour`, `hours`. Anything else is rejected with:
+*"unrecognized schedule — use `every 30 m`, `every 2 h`, or `09:00`"*.
 
 Timers live in the main process and are rebuilt from `routines.json` on launch, so routines only fire while
 the app is running. A window missed while the app was closed is not replayed. If a routine is still firing
 when its next tick arrives, the tick is skipped rather than overlapped.
 
-**Natural-language reminders** are parsed from the prompt itself (`electron/remind.ts`). For example:
+**Natural-language reminders** are parsed from the prompt itself (`electron/remind.ts`), so you never have to
+open the Routines panel. For example:
 
 ```
 remind me to reconcile ad spend at 9am
-keep an eye on the pipeline every 2 hours
+keep reminding me to check the pipeline every 2 hours
 ```
+
+The prompt must contain the word **remind** or **reminder**, and must carry a parseable schedule — otherwise
+it is treated as an ordinary task and nothing is scheduled. Times accept `9am`, `9:30pm`, `09:00`, and `12am`
+is midnight.
 
 The agent replies with a confirmation, a desktop notification is registered, and the reminder appears in the
 Routines panel with `origin: "reminder"`. To cancel, say *stop reminding me*, *cancel reminders*,

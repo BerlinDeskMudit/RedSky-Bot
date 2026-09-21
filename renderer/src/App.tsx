@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { api } from './api'
 import { stripThinking } from './format'
-import type { AppNotice, Bot, EventEnvelope, FileNode, JobTemplate, MemoryRow, ModelOption, Routine } from './types'
+import type { AppNotice, Bot, EventEnvelope, FileNode, JobTemplate, MemoryRow, ModelOption, Routine, SearchHit } from './types'
 import {
   BellIcon,
   BlobAvatar,
@@ -72,6 +72,7 @@ export default function App(): React.JSX.Element {
   const [bots, setBots] = useState<Bot[]>([])
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [search, setSearch] = useState('')
+  const [hits, setHits] = useState<SearchHit[]>([])
   const [composer, setComposer] = useState('')
   const [sending, setSending] = useState(false)
   const [panel, setPanel] = useState<Panel>('none')
@@ -218,9 +219,39 @@ export default function App(): React.JSX.Element {
 
   const visible = useMemo(() => {
     const q = search.trim().toLowerCase()
-    if (!q) return bots
-    return bots.filter((b) => `${b.name} ${b.job} ${b.preview}`.toLowerCase().includes(q))
+    const matched = q ? bots.filter((b) => `${b.name} ${b.job} ${b.preview}`.toLowerCase().includes(q)) : bots
+    // Pinned agents first, archived ones last; Array.sort is stable, so the
+    // incoming most-recent-first order survives inside each group.
+    const rank = (b: Bot) => (b.archived ? 2 : 0) + (b.pinned ? 0 : 1)
+    return [...matched].sort((a, b) => rank(a) - rank(b))
   }, [bots, search])
+
+  useEffect(() => {
+    const q = search.trim()
+    if (q.length < 2) {
+      setHits([])
+      return
+    }
+    const timer = setTimeout(() => {
+      void api
+        .search(q)
+        .then(setHits)
+        .catch(() => setHits([]))
+    }, 200)
+    return () => clearTimeout(timer)
+  }, [search])
+
+  const openHit = useCallback((hit: SearchHit) => {
+    if (!hit.path) return
+    const rel = hit.path
+    void api
+      .fileContent(rel)
+      .then((content) => {
+        setFileView({ path: rel, content })
+        setPanel('computer')
+      })
+      .catch(() => undefined)
+  }, [])
 
   const newAgent = useCallback(
     async (tpl?: JobTemplate) => {
@@ -328,6 +359,28 @@ export default function App(): React.JSX.Element {
             <p className="px-3 py-6 text-[12px] leading-relaxed" style={{ color: 'var(--sidebar-faint)' }}>
               Create an agent, give it a job, get a hit of finished work.
             </p>
+          )}
+          {hits.length > 0 && (
+            <div className="mt-3">
+              <p className="px-2 pb-1 text-[11px] uppercase tracking-wide" style={{ color: 'var(--sidebar-faint)' }}>
+                In workspace
+              </p>
+              {hits.map((h) => (
+                <button
+                  key={h.id}
+                  onClick={() => openHit(h)}
+                  title={h.path}
+                  className="w-full text-left rounded-[8px] px-2 py-1.5 mb-0.5 hover:bg-[var(--sidebar-hover)]"
+                >
+                  <span className="block text-[12px] truncate" style={{ color: 'var(--sidebar-text)' }}>
+                    {h.title}
+                  </span>
+                  <span className="block text-[11px] truncate mt-0.5" style={{ color: 'var(--sidebar-muted)' }}>
+                    {h.snippet}
+                  </span>
+                </button>
+              ))}
+            </div>
           )}
         </nav>
         <div className="px-3.5 pb-3.5 pt-2 flex items-center gap-2 shrink-0">
@@ -455,6 +508,17 @@ export default function App(): React.JSX.Element {
                           ? () => {
                               stickRef.current = true
                               void api.resendFrom(selected.id, m.id!, model || undefined).then(upsertBot)
+                            }
+                          : undefined
+                      }
+                      onBranch={
+                        m.role === 'assistant' && m.id
+                          ? () => {
+                              stickRef.current = true
+                              void api.branchFrom(selected.id, m.id!, model || undefined).then((b) => {
+                                upsertBot(b)
+                                openBot(b.id)
+                              })
                             }
                           : undefined
                       }
@@ -689,6 +753,20 @@ export default function App(): React.JSX.Element {
             <div className="flex flex-wrap gap-2 mt-3">
               <button onClick={() => void saveEditor()} className="rounded-full px-3 py-1.5 text-[13px]" style={{ background: 'var(--fill-emphasis)', color: 'var(--bubble-user-ink)' }}>
                 Save
+              </button>
+              <button
+                onClick={() => void api.setBotFlags(selected.id, { pinned: !selected.pinned }).then(upsertBot)}
+                className="rounded-full px-3 py-1.5 text-[13px]"
+                style={{ background: 'var(--fill-secondary)' }}
+              >
+                {selected.pinned ? 'Unpin' : 'Pin'}
+              </button>
+              <button
+                onClick={() => void api.setBotFlags(selected.id, { archived: !selected.archived }).then(upsertBot)}
+                className="rounded-full px-3 py-1.5 text-[13px]"
+                style={{ color: 'var(--text-secondary)' }}
+              >
+                {selected.archived ? 'Unarchive' : 'Archive'}
               </button>
               <button
                 onClick={() => {
