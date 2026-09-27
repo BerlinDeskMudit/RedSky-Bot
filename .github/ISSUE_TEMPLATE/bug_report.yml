@@ -9,8 +9,8 @@ body:
         Thanks for taking the time to report this. Red Sky depends on a locally installed OpenCode CLI, so a
         few environment details go a long way.
 
-        **Before you file:** check [Troubleshooting](https://github.com/0xMudit/RedSky-Bot#troubleshooting)
-        and the [configuration reference](https://github.com/0xMudit/RedSky-Bot/blob/main/docs/CONFIGURATION.md)
+        **Before you file:** check [Troubleshooting](https://github.com/BerlinDeskMudit/RedSky-Bot#troubleshooting)
+        and the [configuration reference](https://github.com/BerlinDeskMudit/RedSky-Bot/blob/main/docs/CONFIGURATION.md)
         — most "stuck starting", "offline", and empty-model-picker reports are covered there.
 
   - type: checkboxes
@@ -109,7 +109,7 @@ body:
       label: Logs
       description: |
         Paste the relevant lines from the log directory (use **Open Logs** in the app, or see
-        [Logs](https://github.com/0xMudit/RedSky-Bot/blob/main/docs/CONFIGURATION.md#logs)).
+        [Logs](https://github.com/BerlinDeskMudit/RedSky-Bot/blob/main/docs/CONFIGURATION.md#logs)).
         `app.ndjson` covers the main process, `tools.ndjson` every agent tool call, `server-*.info` the
         OpenCode boot. Redact anything personal before pasting.
       render: text

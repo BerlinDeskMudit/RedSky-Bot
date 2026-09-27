@@ -71,5 +71,5 @@ The first version of Red Sky: a desktop shell around a locally spawned OpenCode 
 - **Settings** — privacy, Auto Review mode, handoff, and parallelism, plus **Open Workspace** /
   **Open Logs** shortcuts.
 
-[Unreleased]: https://github.com/0xMudit/RedSky-Bot/compare/v0.2.0...HEAD
-[0.2.0]: https://github.com/0xMudit/RedSky-Bot/releases/tag/v0.2.0
+[Unreleased]: https://github.com/BerlinDeskMudit/RedSky-Bot/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/BerlinDeskMudit/RedSky-Bot/releases/tag/v0.2.0

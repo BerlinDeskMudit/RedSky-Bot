@@ -10,7 +10,7 @@ body:
         mechanism — that leaves room for a better implementation than either of us has thought of yet.
 
         Large changes are worth discussing before any code is written; see
-        [CONTRIBUTING.md](https://github.com/0xMudit/RedSky-Bot/blob/main/CONTRIBUTING.md).
+        [CONTRIBUTING.md](https://github.com/BerlinDeskMudit/RedSky-Bot/blob/main/CONTRIBUTING.md).
 
   - type: checkboxes
     id: preflight

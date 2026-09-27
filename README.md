@@ -10,7 +10,7 @@ Spin up a bot for Sales Outbound, Talent Scout, Paid Media, Bug Reproduction, or
 Each one gets its own session, workspace, memory, and schedule — and checks back when it needs a human.
 
 <p>
-<a href="https://github.com/0xMudit/RedSky-Bot/actions/workflows/ci.yml"><img src="https://github.com/0xMudit/RedSky-Bot/actions/workflows/ci.yml/badge.svg" alt="CI status" /></a>
+<a href="https://github.com/BerlinDeskMudit/RedSky-Bot/actions/workflows/ci.yml"><img src="https://github.com/BerlinDeskMudit/RedSky-Bot/actions/workflows/ci.yml/badge.svg" alt="CI status" /></a>
 <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license" /></a>
 <img src="https://img.shields.io/badge/node-%E2%89%A520-brightgreen.svg" alt="Node 20 or newer" />
 <img src="https://img.shields.io/badge/platforms-windows%20%7C%20macos%20%7C%20linux-lightgrey.svg" alt="Windows, macOS, Linux" />
@@ -103,7 +103,7 @@ approval request in one inbox.
 
 ```bash
 # 1. Clone
-git clone https://github.com/0xMudit/RedSky-Bot.git
+git clone https://github.com/BerlinDeskMudit/RedSky-Bot.git
 cd RedSky-Bot
 
 # 2. Install dependencies (also fetches the Electron binary)
@@ -219,13 +219,13 @@ CI runs `typecheck`, `build`, and `test` on Linux (Node 20 and 22), Windows (Nod
 | Symptom | Fix |
 | --- | --- |
 | Status stuck on **starting**, times out after 45s | `opencode` is not on `PATH`. Install it from <https://opencode.ai> (it is not Ollama), then relaunch — or set `OPENCODE_BIN`. |
-| **offline · opencode exited** | The OpenCode server crashed on launch. Check `workspace/logs/server-*.info`, then [open an issue](https://github.com/0xMudit/RedSky-Bot/issues). |
+| **offline · opencode exited** | The OpenCode server crashed on launch. Check `workspace/logs/server-*.info`, then [open an issue](https://github.com/BerlinDeskMudit/RedSky-Bot/issues). |
 | "OpenCode did not return a session id" | The server started but did not answer `/session`. Confirm a provider is authenticated (`opencode auth`). |
 | Model picker is empty | No provider is connected, or only Ollama is configured — Ollama is deliberately excluded. |
 | A run is hanging on an approval card | A bot is waiting on you. Choose **once** / **always**, or reject it in the chat. |
 | Build errors after pulling | `npm install`, then `npm run typecheck`. |
 
-More in [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) and the [issue tracker](https://github.com/0xMudit/RedSky-Bot/issues).
+More in [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) and the [issue tracker](https://github.com/BerlinDeskMudit/RedSky-Bot/issues).
 
 ## Roadmap
 
@@ -245,7 +245,7 @@ Contributions are welcome — issues, docs, and pull requests alike. Start with
 [CONTRIBUTING.md](CONTRIBUTING.md), which covers setup, branch and commit conventions, and what a reviewable
 PR looks like. Please also read the [Code of Conduct](CODE_OF_CONDUCT.md); it applies to every project space.
 
-Good first issues are labelled [`good first issue`](https://github.com/0xMudit/RedSky-Bot/labels/good%20first%20issue).
+Good first issues are labelled [`good first issue`](https://github.com/BerlinDeskMudit/RedSky-Bot/labels/good%20first%20issue).
 The roadmap items above are a fair summary of where help is most useful.
 
 ## Security

@@ -23,7 +23,7 @@ Fixes land on `main` and are released in the latest minor version. Older version
 **Do not open a public issue for a security problem.**
 
 Use GitHub's private vulnerability reporting on this repository:
-**[Report a vulnerability](https://github.com/0xMudit/RedSky-Bot/security/advisories/new)**.
+**[Report a vulnerability](https://github.com/BerlinDeskMudit/RedSky-Bot/security/advisories/new)**.
 
 If you cannot use that channel, open a minimal public issue that says only *"security report — please contact
 me"* and wait for a maintainer to reach out. Do not include reproduction details, payloads, or affected

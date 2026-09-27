@@ -19,7 +19,7 @@ Everything you need to build, run, and change Red Sky. Read
 - A configured OpenCode provider, or the model picker will be empty.
 
 ```bash
-git clone https://github.com/0xMudit/RedSky-Bot.git
+git clone https://github.com/BerlinDeskMudit/RedSky-Bot.git
 cd RedSky-Bot
 npm install          # also downloads the Electron binary (~100 MB)
 npm start            # build + launch
